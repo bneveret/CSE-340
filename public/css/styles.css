@@ -116,7 +116,19 @@ main {
   border-color: black;
   border: solid 1px;
 }
-
+a {
+  color: #4da6ff;
+  text-decoration: underline;
+}
+a:visited {
+  color: #c084fc;
+}
+a:hover {
+  color: #1a73e8;
+}
+a:active {
+  color: #ffffff;
+}
 
 @media screen and (min-width: 850px) {
   html {
