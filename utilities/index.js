@@ -57,6 +57,31 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+  /* **************************************
+* Build the specific view HTML
+* ************************************ */
+Util.buildSpecificGrid = async function(data) {
+  let grid
+  if(data.length > 0){
+    grid = '<ul id="specific-display">'
+    data.forEach(specific => { 
+      grid += '<li>'
+      grid += '<img src="' + specific.inv_image + '" alt="Image of ' + specific.inv_make + ' ' + specific.inv_model
+      +' on CSE Motors" /></li>'
+      grid += '<li><p>' + specific.inv_description + '</p>'
+      grid += '<p>Price: $' 
+      + new Intl.NumberFormat('en-US').format(specific.inv_price) + '</p>'
+      grid += '<p>Color: ' + specific.inv_color + '</p>'
+      grid += '<p>Mileage: ' + specific.inv_miles + '</p>'
+      grid += '</li>'
+  })
+    grid += '</ul>'
+  } else { 
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+  }
+  return grid
+}
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

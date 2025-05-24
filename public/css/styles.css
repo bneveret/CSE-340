@@ -130,6 +130,31 @@ a:active {
   color: #ffffff;
 }
 
+#specific-display {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+  align-items: start;
+}
+#specific-display li {
+  padding: 0.3rem;
+}
+#specific-display li img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  object-fit: cover;
+}
+#specific-display li p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
 @media screen and (min-width: 850px) {
   html {
     background-image: url(../images/site/checkerboard.jpg);
@@ -141,11 +166,18 @@ a:active {
     margin: 5px 10% 5px 10%;
     background-color: #1c1c1e;
   }
-  main {
+  .home-main {
     display: grid;
     grid-template-columns: 50% 50%;
     margin: 5px auto 5px auto;
     width: fit-content;
+  }
+  .specific-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
   }
   #title {
     grid-column-start: 1;
@@ -157,7 +189,26 @@ a:active {
     position: relative;
     min-height: 300px;
   }
+
+  .specific-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
   }
+
+  .specific-wrapper h1 {
+    text-align: center;
+    font-size: 2rem;
+    width: 100%;
+  }
+  #specific-display {
+    grid-template-columns: 1fr;
+  }
+}
 
   #reviews {
     margin-top: 18px;
