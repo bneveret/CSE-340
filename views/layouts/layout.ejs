@@ -7,7 +7,7 @@
         <%- include('../partials/header') %>
         <%- include('../partials/navigation') %>
 
-        <main class="<%= mainClass || '' %>">
+        <main class="<%= typeof mainClass !== 'undefined' ? mainClass : '' %>">
             <%- body %>
         </main>
 

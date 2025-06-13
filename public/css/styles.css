@@ -155,6 +155,72 @@ a:active {
   font-size: 1rem;
 }
 
+/*Login*/
+.account-main {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: #3675b4;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #a0a0a0;
+  border-radius: 8px;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3d3d3d;
+  border: none;
+  color: #c7c7c7;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1a1a1a;
+}
+
+.register-link {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.register-link a {
+  color: #fdff77;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
 @media screen and (min-width: 850px) {
   html {
     background-image: url(../images/site/checkerboard.jpg);
