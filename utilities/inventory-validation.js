@@ -23,8 +23,11 @@ const checkClassificationData = async (req, res, next) => {
   let errors = validationResult(req);
 
   if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
     return res.render("./inventory/add-classification", {
-      errors: errors.array(),
+      title: "Add Classification",
+      nav,
+      errors,
       message: null,
       classification_name, // sticky value
     });
@@ -110,8 +113,11 @@ const checkInventoryData = async (req, res, next) => {
   const classificationList = await utilities.buildClassificationList(formData.classification_id)
 
   if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
     return res.render("./inventory/add-inventory", {
-      errors: errors.array(),
+      title: "Add Inventory",
+      nav,
+      errors,
       message: null,
       classificationList,
       ...formData,

@@ -6,15 +6,15 @@
 
 <%- messages() %>
 
-<% if (errors) { %>
+<% if (errors && !errors.isEmpty()) { %>
   <ul class="notice">
- <% errors.array().forEach(error => { %>
-   <li><%= error.msg %></li>
-<%  }) %>
- </ul>
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
 <% } %>
 
-<form id="classificationForm" action="/inventory/add-classification" method="post">
+<form id="classificationForm" action="/inv/add-classification" method="post">
     <div class="form-group">
     <label for="classification_name">Classification Name:</label>
     <input

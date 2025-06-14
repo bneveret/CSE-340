@@ -6,15 +6,15 @@
 
 <%- messages() %>
 
-<% if (errors) { %>
+<% if (errors && !errors.isEmpty()) { %>
   <ul class="notice">
- <% errors.array().forEach(error => { %>
-   <li><%= error.msg %></li>
-<%  }) %>
- </ul>
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
 <% } %>
  
-  <form id="addInventoryForm" action="/inventory/add-inventory" method="post">
+  <form id="addInventoryForm" action="/inv/add-inventory" method="post">
     <!-- Classification Dropdown -->
     <label for="classificationList">Classification</label>
     <%- classificationList %>
@@ -31,10 +31,10 @@
     <textarea id="inv_description" name="inv_description" required><%= inv_description || '' %></textarea></div>
 
     <div class="form-group"><label for="inv_image">Image Path</label>
-    <input type="text" id="inv_image" name="inv_image" required value="<%= inv_image || '/images/vehicles/no-image.png' %>"></div>
+    <input type="text" id="inv_image" name="inv_image" required value="<%- inv_image || '/images/vehicles/no-image.png' %>"></div>
 
     <div class="form-group"><label for="inv_thumbnail">Thumbnail Path</label>
-    <input type="text" id="inv_thumbnail" name="inv_thumbnail" required value="<%= inv_thumbnail || '/images/vehicles/no-image-tn.png' %>"></div>
+    <input type="text" id="inv_thumbnail" name="inv_thumbnail" required value="<%- inv_thumbnail || '/images/vehicles/no-image-tn.png' %>"></div>
 
     <div class="form-group"><label for="inv_price">Price</label>
     <input type="text" id="inv_price" name="inv_price" required value="<%= inv_price || '' %>"></div>

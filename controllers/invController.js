@@ -5,7 +5,7 @@ const invCont = {}
 
 
 invCont.showManagement = async function (req, res) {
-  const message = req.flash('message'); // assumes flash middleware is configured
+  const message = req.flash('message');
   let nav = await utilities.getNav()
   res.render('./inventory/management', { 
     title: "Management",
@@ -19,8 +19,28 @@ invCont.showManagement = async function (req, res) {
  *  Build inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
-  const classification_id = req.params.classificationId
-  const data = await invModel.getInventoryByClassificationId(classification_id)
+  const rawId = req.params.classificationId;
+  const classification_id = parseInt(rawId, 10);
+  if (isNaN(classification_id)) {
+    const nav = await utilities.getNav();
+    req.flash("notice", "Invalid classification ID.");
+    return res.status(400).render("./", {
+      title: "Welcome to CSE Motors!",
+      nav,
+      errors: null,
+    });
+  }
+  try {
+    const data = await invModel.getInventoryByClassificationId(classification_id)
+    if (!data || data.length === 0) {
+      const nav = await utilities.getNav();
+      req.flash("notice", "No vehicles found for this classification.");
+      return res.status(404).render("./", {
+        title: "Welcome to CSE Motors!",
+        nav,
+        errors: null,
+      });
+  }
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
   const className = data[0].classification_name
@@ -30,8 +50,19 @@ invCont.buildByClassificationId = async function (req, res, next) {
     grid,
     mainClass: "classification-main",
     errors: null,
-  })
-}
+  });
+
+  } catch (err) {
+    console.error("Error building classification page:", err);
+    const nav = await utilities.getNav();
+    req.flash("notice", "Unexpected server error.");
+    return res.status(500).render("./", {
+      title: "Welcome to CSE Motors!",
+      nav,
+      errors: null,
+    });
+  }
+};
 
 /* ***************************
  *  Add classification
@@ -56,26 +87,28 @@ invCont.processAddClassification = async (req, res) => {
 
     if (result) {
       const nav = await utilities.getNav();
-      req.flash("message", "New classification added successfully.");
+      req.flash("notice", "New classification added successfully.");
 
       return res.render("./inventory/management", {
-        message: req.flash("message"),
+        title: "Management",
         nav,
         errors: null,
       });
     } else {
-      req.flash("message", "Failed to add classification.");
+      req.flash("notice", "Failed to add classification.");
       return res.status(500).render("./inventory/add-classification", {
-        message: req.flash("message"),
+        title: "Add Classification",
+        nav,
         errors: null,
         classification_name,
       });
     }
   } catch (err) {
     console.error(err);
-    req.flash("message", "Server error. Please try again.");
+    req.flash("notice", "Server error. Please try again.");
     return res.status(500).render("./inventory/add-classification", {
-      message: req.flash("message"),
+      title: "Add Classification",
+      nav,
       errors: null,
       classification_name,
     });
@@ -135,17 +168,18 @@ invCont.processAddInventory = async function (req, res) {
 
     if (result) {
       const nav = await utilities.getNav();
-      req.flash('message', 'Inventory item successfully added.');
+      req.flash('notice', 'Inventory item successfully added.');
       return res.render('./inventory/management', {
-        message: req.flash('message'),
+        title: "Management",
         nav,
         errors: null,
       });
     } else {
-      req.flash('message', 'Failed to add inventory item.');
+      req.flash('notice', 'Failed to add inventory item.');
       const classificationList = await utilities.buildClassificationList(formData.classification_id);
       return res.status(500).render('./inventory/add-inventory', {
-        message: req.flash('message'),
+        title: "Add Inventory",
+        nav,
         errors: null,
         classificationList,
         ...formData
@@ -153,10 +187,11 @@ invCont.processAddInventory = async function (req, res) {
     }
   } catch (err) {
     console.error(err);
-    req.flash('message', 'Server error. Try again.');
+    req.flash('notice', 'Server error. Try again.');
     const classificationList = await utilities.buildClassificationList(formData.classification_id);
     return res.status(500).render('./inventory/add-inventory', {
-      message: req.flash('message'),
+      title: "Add Inventory",
+      nav,
       errors: null,
       classificationList,
       ...formData
