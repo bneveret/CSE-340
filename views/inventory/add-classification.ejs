@@ -1,0 +1,33 @@
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+ <% errors.array().forEach(error => { %>
+   <li><%= error.msg %></li>
+<%  }) %>
+ </ul>
+<% } %>
+
+<form id="classificationForm" action="/inventory/add-classification" method="post">
+    <div class="form-group">
+    <label for="classification_name">Classification Name:</label>
+    <input
+      type="text"
+      id="classification_name"
+      name="classification_name"
+      required
+      pattern="^[A-Za-z0-9]+"
+      title="No spaces or special characters allowed."
+      value="<%= classification_name || '' %>"
+    />
+    </div>
+    <button type="submit">Add Classification</button>
+  </form>
+
+  <a href="/inv/management">Back to Inventory Management</a>
