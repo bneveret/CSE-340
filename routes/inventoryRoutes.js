@@ -1,11 +1,14 @@
 // Needed Resources 
 const express = require("express")
 const router = new express.Router() 
+const utilities = require("../utilities")
 const invController = require("../controllers/invController")
 const invValidate = require("../utilities/inventory-validation")
 
 
 router.get('/management', invController.showManagement);
+
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);

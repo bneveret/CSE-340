@@ -11,6 +11,7 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
+const cookieParser = require("cookie-parser")
 const utilities = require("./utilities/")
 const static = require("./routes/static")
 const bodyParser = require("body-parser")
@@ -31,6 +32,7 @@ const accountRoute = require("./routes/accountRoute")
   saveUninitialized: true,
   name: 'sessionId',
 }))
+app.use(cookieParser())
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -40,7 +42,9 @@ app.use(function(req, res, next){
 })
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates
