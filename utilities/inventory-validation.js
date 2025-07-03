@@ -127,4 +127,29 @@ const checkInventoryData = async (req, res, next) => {
   next()
 }
 
-module.exports = {classificationRules, checkClassificationData, inventoryRules, checkInventoryData};
+/* ***************************
+ * Check Update Data
+ * ************************** */
+const checkUpdateData = async (req, res, next) => {
+  const errors = validationResult(req)
+  const formData = req.body
+  const inv_id = req.params.inventoryId
+  const classificationList = await utilities.buildClassificationList(formData.classification_id)
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    return res.render("./inventory/edit-inventory", {
+      title,
+      nav,
+      errors,
+      message: null,
+      inv_id,
+      classificationList,
+      ...formData,
+    })
+  }
+
+  next()
+}
+
+module.exports = {classificationRules, checkClassificationData, inventoryRules, checkInventoryData, checkUpdateData};
