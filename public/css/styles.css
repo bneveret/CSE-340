@@ -160,9 +160,23 @@ a:active {
   width: 100%;
   max-width: 400px;
   padding: 2rem;
-  background-color: #3675b4;
+  background-color: #084a8b;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.account-main a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+.account-main a:visited {
+  color: #ddffe3;
+}
+.account-main a:hover {
+  color: #ffcaca;
+}
+.account-main a:active {
+  color: #ffffff;
 }
 
 .form-group {
