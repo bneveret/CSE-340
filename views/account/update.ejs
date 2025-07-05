@@ -1,0 +1,66 @@
+<% if (messages().notice) { %>
+  <ul class="notice">
+    <% messages().notice.forEach(function(msg){ %>
+      <li><%= msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<% if (errors && errors.length > 0) { %>
+  <div class="errors">
+    <ul>
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<h1><%= title %></h1>
+
+<!-- ============================= -->
+<!-- Account Update Form -->
+<!-- ============================= -->
+<section>
+  <h2>Update Account Information</h2>
+  <form action="/account/update" method="post">
+    <label for="account_firstname">First Name</label>
+    <input type="text" id="account_firstname" name="account_firstname" required
+      value="<%= typeof accountData.account_firstname !== 'undefined' ? accountData.account_firstname : '' %>">
+
+    <label for="account_lastname">Last Name</label>
+    <input type="text" id="account_lastname" name="account_lastname" required
+      value="<%= typeof accountData.account_lastname !== 'undefined' ? accountData.account_lastname : '' %>">
+
+    <label for="account_email">Email</label>
+    <input type="email" id="account_email" name="account_email" required
+      value="<%= typeof accountData.account_email !== 'undefined' ? accountData.account_email : '' %>">
+
+    <!-- Hidden field with account_id -->
+    <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+
+    <input type="submit" value="Update Account Info">
+  </form>
+</section>
+
+<!-- ============================= -->
+<!-- Change Password Form -->
+<!-- ============================= -->
+<section>
+  <h2>Change Password</h2>
+  <p>
+    To change your password, enter a new one below. Passwords must be at least 12 characters long and contain at least one number, one capital letter, and one special character.
+  </p>
+
+  <form action="/account/update-password" method="post">
+    <label for="account_password">New Password</label>
+    <input type="password" id="account_password" name="account_password" required
+      pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$"
+      title="Must be at least 12 characters, contain a number, a capital letter, and a special character.">
+
+    <!-- Hidden field with account_id -->
+    <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+
+    <input type="submit" value="Change Password">
+  </form>
+</section>

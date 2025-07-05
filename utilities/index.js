@@ -117,24 +117,44 @@ Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 * Middleware to check token validity
 **************************************** */
 Util.checkJWTToken = (req, res, next) => {
- if (req.cookies.jwt) {
+  const token = req.cookies.jwt
+ if (token) {
   jwt.verify(
-   req.cookies.jwt,
+   token,
    process.env.ACCESS_TOKEN_SECRET,
    function (err, accountData) {
     if (err) {
-     req.flash("Please log in")
+     req.flash("notice", "Please log in")
      res.clearCookie("jwt")
+     res.locals.loggedin = false
+     res.locals.accountData = null
      return res.redirect("/account/login")
     }
     res.locals.accountData = accountData
-    res.locals.loggedin = 1
+    res.locals.loggedin = true
     next()
    })
  } else {
+  res.locals.loggedin = false
+  res.locals.accountData = null
   next()
  }
 }
+
+/* ****************************************
+ * Middleware to restrict inventory admin access to Employee or Admin
+**************************************** */
+Util.requireEmployeeOrAdmin = (req, res, next) => {
+  const account = res.locals.accountData
+
+  if (res.locals.loggedin && account && (account.account_type === "Employee" || account.account_type === "Admin")) {
+    return next()
+  } else {
+    req.flash("notice", "You must be logged in with appropriate permissions to view that page.")
+    return res.redirect("/")
+  }
+}
+
 
 /* ****************************************
  *  Check Login

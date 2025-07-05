@@ -10,13 +10,97 @@ require("dotenv").config()
 * *************************************** */
 accountController.buildManagement = async function(req, res, next) {
   const nav = await utilities.getNav()
+  const accountData = res.locals.accountData
+
   res.render("account/management",
     {
         title: "Account Management",
         nav,
         mainClass: "account-main",
         errors: null,
+        accountData
     })
+}
+
+/* ****************************************
+*  Show account update form
+* *************************************** */
+accountController.showUpdateForm = async function(req, res) {
+  const nav = await utilities.getNav()
+  const accountId = parseInt(req.params.accountId)
+
+  if (!res.locals.accountData || res.locals.accountData.account_id !== accountId) {
+    req.flash("notice", "Access denied.")
+    return res.redirect("/account/login")
+  }
+
+  const accountData = res.locals.accountData
+  res.render("account/update", {
+    title: "Update Account",
+    nav,
+    mainClass: "account-main",
+    accountData,
+    errors: null
+  })
+}
+
+/* ****************************************
+*  Process update forms
+* *************************************** */
+// Update name/email
+accountController.updateAccount = async function(req, res) {
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  const updateResult = await accountModel.updateAccountInfo(
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  )
+
+  if (updateResult) {
+    req.flash("notice", "Account information updated successfully.")
+  } else {
+    req.flash("notice", "Update failed. Try again.")
+  }
+
+  const nav = await utilities.getNav()
+  const accountData = await accountModel.getAccountById(account_id)
+  res.render("account/management", {
+    title: "Account Management",
+    nav,
+    accountData,
+    errors: null
+  })
+}
+
+// Update password
+accountController.updatePassword = async function(req, res) {
+  const { account_id, account_password } = req.body
+
+  try {
+    const hashedPassword = await bcrypt.hash(account_password, 10)
+    const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
+
+    const nav = await utilities.getNav()
+    const accountData = await accountModel.getAccountById(account_id)
+
+    if (updateResult && updateResult.account_id) {
+      req.flash("notice", "Password updated successfully.")
+    } else {
+      req.flash("notice", "Password update failed.")
+    }
+
+    res.render("account/management", {
+      title: "Account Management",
+      nav,
+      accountData,
+      errors: null
+    })
+  } catch (error) {
+    console.error(error)
+    req.flash("notice", "Server error during password update.")
+    res.redirect("/account/update/" + account_id)
+  }
 }
 
 /* ****************************************
@@ -134,6 +218,15 @@ accountController.accountLogin = async function (req, res) {
   } catch (error) {
     throw new Error('Access Forbidden')
   }
+}
+
+/* ****************************************
+ *  Process logout request
+ * ************************************ */
+accountController.logout = (req, res) => {
+  res.clearCookie("jwt")
+  req.flash("notice", "You have successfully logged out.")
+  res.redirect("/")
 }
 
 module.exports = accountController

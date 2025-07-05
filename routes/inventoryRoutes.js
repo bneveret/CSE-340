@@ -6,23 +6,23 @@ const invController = require("../controllers/invController")
 const invValidate = require("../utilities/inventory-validation")
 
 
-router.get('/management', invController.showManagement);
+router.get('/management', utilities.checkLogin, utilities.requireEmployeeOrAdmin, invController.showManagement);
 
-router.get('/edit/:inventoryId', invController.showEditInventory);
+router.get('/edit/:inventoryId', utilities.checkLogin, utilities.requireEmployeeOrAdmin, invController.showEditInventory);
 router.post("/update/", 
   invValidate.inventoryRules(),
   invValidate.checkUpdateData, 
   invController.updateInventory)
 
-router.get('/delete/:inventoryId', invController.showDeleteInventory)
+router.get('/delete/:inventoryId', utilities.checkLogin, utilities.requireEmployeeOrAdmin, invController.showDeleteInventory)
 router.post('/delete', invController.deleteInventory)
 
-router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
+router.get("/getInventory/:classification_id", utilities.checkLogin, utilities.handleErrors(invController.getInventoryJSON))
 
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);
 
-router.get('/add-classification', invController.showAddClassificationForm);
+router.get('/add-classification', utilities.checkLogin, utilities.requireEmployeeOrAdmin, invController.showAddClassificationForm);
 // Post route with server-side validation
 router.post(
   "/add-classification",
@@ -34,7 +34,7 @@ router.post(
 // Route to build inventory by inventory view
 router.get("/detail/:inventoryId", invController.buildByInventoryId);
 
-router.get('/add-inventory', invController.showAddInventoryForm);
+router.get('/add-inventory', utilities.checkLogin, utilities.requireEmployeeOrAdmin, invController.showAddInventoryForm);
 
 // Post route with validation
 router.post(
